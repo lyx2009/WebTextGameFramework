@@ -1,6 +1,7 @@
 # 文字冒险合集 · 多故事 Web 环境
 
-一个纯前端（HTML + CSS + JavaScript）的互动文字冒险合集，支持多个故事，无需构建工具，直接用浏览器打开 `index.html` 即可运行。
+一个纯前端（HTML + CSS + JavaScript）的互动文字冒险合集，支持多个故事，无需构建工具，直接用浏览器打开 `index.html` 即可运行。 
+项目体验地址: https://game.lyxsmcs.top/index.html 
 
 ## 快速开始
 
