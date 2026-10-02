@@ -1,0 +1,35 @@
+/* ==========================================================================
+   themes/test-theme.css
+   测试主题：晨雾
+   说明：保留的测试主题，用于功能测试与审阅。它通过覆盖 [data-theme="test-theme"]
+   下的 CSS 变量来改变整个界面的配色与画布贴图调色板。
+
+   扩展方式：复制本文件为新的主题文件（例如 themes/ocean-theme.css），
+   修改选择器名称、变量值，并在 index.html 中追加一行带 data-theme-* 属性的
+   link 标签，主题系统即可自动识别并在切换面板中展示。
+   ========================================================================== */
+
+[data-theme="test-theme"] {
+  /* 界面配色：暖色晨雾风格 */
+  --bg: #f3ece0;
+  --bg-soft: #ece2d1;
+  --panel: #fbf6ec;
+  --panel-2: #f1e8d6;
+  --text: #3a3228;
+  --text-muted: #8a7f6d;
+  --accent: #c98a4b;
+  --accent-strong: #a96a2f;
+  --accent-contrast: #fff8ee;
+  --border: #e0d3bd;
+  --shadow: 0 12px 32px rgba(120, 90, 50, 0.18);
+  --radius: 18px;
+
+  /* 画布贴图调色板：晨雾森林的暖色天空与深色地面 */
+  --sky-top: #ffd9a8;
+  --sky-mid: #ffc98f;
+  --sky-bottom: #f2b06a;
+  --ground: #6b5a3f;
+  --decor-a: #8a6f4d;
+  --decor-b: #57472f;
+  --glow: #ffe6b8;
+}

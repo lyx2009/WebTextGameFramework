@@ -1,0 +1,496 @@
+/* ==========================================================================
+   admin.css
+   管理后台样式（admin.html）
+   中性浅色配色，包含登录、标签页、卡片、槽位网格与移动端适配。
+
+   命名约定：本文件所有类名统一使用 mgmt- 前缀。
+   注意：请勿改回 ad- 前缀。部分广告拦截插件会按 [class^="ad-"] 之类的
+   通用规则隐藏元素，曾导致登录输入框、按钮在开启拦截插件的浏览器中消失。
+   ========================================================================== */
+
+/* 资源版本标记：供 asset-check.js 检测样式是否命中旧缓存（改样式后请同步 +1） */
+:root {
+  --wtg-admin-css-version: 5;
+}
+
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --panel-2: #f4f6f9;
+  --text: #22272e;
+  --muted: #6b7280;
+  --accent: #4f7cff;
+  --accent-strong: #3563d6;
+  --accent-contrast: #ffffff;
+  --border: #d9dee6;
+  --danger: #d64545;
+  --ok: #1e9e63;
+  --shadow: 0 8px 24px rgba(30, 40, 60, 0.08);
+  --radius: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   登录界面
+   -------------------------------------------------------------------------- */
+.login-wrap {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.login-title {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+}
+
+.login-sub {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* --------------------------------------------------------------------------
+   顶部与标签页
+   -------------------------------------------------------------------------- */
+.mgmt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.mgmt-brand {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.mgmt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mgmt-tabs {
+  display: flex;
+  gap: 4px;
+  max-width: 1080px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mgmt-tab {
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.mgmt-tab.is-active {
+  color: var(--accent-strong);
+  border-bottom-color: var(--accent-strong);
+}
+
+.mgmt-main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.mgmt-section-title {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.mgmt-sub-title {
+  margin: 24px 0 6px;
+  font-size: 1rem;
+}
+
+.mgmt-hint {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.mgmt-toolbar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   表单与按钮
+   -------------------------------------------------------------------------- */
+.mgmt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.mgmt-field > span {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.mgmt-field-inline {
+  flex-direction: column;
+  margin-bottom: 0;
+  min-width: 220px;
+}
+
+.mgmt-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+
+.mgmt-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.mgmt-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mgmt-btn:active {
+  transform: scale(0.97);
+}
+
+.mgmt-btn-primary {
+  background: var(--accent-strong);
+  color: var(--accent-contrast);
+}
+
+.mgmt-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.mgmt-btn-ghost:hover {
+  background: var(--panel-2);
+}
+
+.mgmt-btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.mgmt-btn-small {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.mgmt-btn-block {
+  width: 100%;
+}
+
+.mgmt-error {
+  margin: 0 0 14px;
+  color: var(--danger);
+  font-size: 0.86rem;
+}
+
+/* --------------------------------------------------------------------------
+   卡片与槽位
+   -------------------------------------------------------------------------- */
+.mgmt-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.mgmt-card-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mgmt-title {
+  font-weight: 600;
+}
+
+.mgmt-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.badge {
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.mgmt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mgmt-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.slot-chip {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.slot-chip:hover:not(:disabled) {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.slot-chip.is-empty {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.mgmt-char-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.mgmt-char-row .mgmt-meta {
+  display: block;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   审核发布
+   -------------------------------------------------------------------------- */
+.mgmt-review-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.mgmt-review-info {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.mgmt-review-row .mgmt-actions {
+  margin-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   轻提示
+   -------------------------------------------------------------------------- */
+.mgmt-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: 90vw;
+  background: var(--text);
+  color: #fff;
+  border-radius: 999px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow);
+  z-index: 200;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: mgmt-toast-in 0.25s ease both;
+}
+
+@keyframes mgmt-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   移动端适配
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .slot-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mgmt-main {
+    padding: 14px 12px 30px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .mgmt-header {
+    padding: 10px 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  /* 标签页横向滚动，避免四个标签在窄屏被挤压换行 */
+  .mgmt-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 12px;
+  }
+
+  .mgmt-tab {
+    flex: 0 0 auto;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .mgmt-toolbar {
+    align-items: stretch;
+  }
+
+  .mgmt-field-inline {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .mgmt-toolbar .mgmt-btn {
+    width: 100%;
+  }
+
+  /* iOS 上输入框字号小于 16px 会触发聚焦自动放大 */
+  .mgmt-input {
+    font-size: 16px;
+  }
+
+  .mgmt-review-row {
+    align-items: stretch;
+  }
+
+  .mgmt-review-row .mgmt-actions {
+    width: 100%;
+  }
+
+  .mgmt-review-row .mgmt-actions .mgmt-btn {
+    flex: 1 1 auto;
+  }
+
+  .login-card {
+    padding: 22px;
+  }
+}
+
+/* 触屏设备：保证可点区域足够大 */
+@media (pointer: coarse) {
+  .mgmt-btn,
+  .slot-chip,
+  .mgmt-tab {
+    min-height: 44px;
+  }
+
+  .mgmt-btn {
+    touch-action: manipulation;
+  }
+
+  .slot-chip {
+    touch-action: manipulation;
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 游戏图标：山峦与晨曦 -->
+  <circle cx="42" cy="24" r="11" fill="#ffd9a8"/>
+  <circle cx="42" cy="24" r="7" fill="#fff6df"/>
+  <path d="M4 52 L22 24 L32 38 L42 28 L60 52 Z" fill="#8a6f4d"/>
+  <path d="M18 52 L32 34 L40 42 L48 38 L60 52 Z" fill="#57472f"/>
+</svg>

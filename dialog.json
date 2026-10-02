@@ -1,0 +1,50 @@
+{
+  "format": "wtg-dialog",
+  "version": 1,
+  "dialogues": {
+    "dawn-realm": {
+      "lin_intro": {
+        "characterId": "lin",
+        "title": "雾中初遇",
+        "affinity": { "lin": 1 },
+        "lines": [
+          { "speaker": "lin", "text": "你终于到了。" },
+          { "speaker": "lin", "text": "雾林里已经很久没有旅人了，我在雾的这头等了很久。" },
+          { "speaker": "旁白", "text": "她的声音很轻，像雾一样，却字字清晰。" },
+          { "speaker": "lin", "text": "想找到晨曦的源头，先越过前面的星湖吧。那里会有人替你指路。" }
+        ]
+      },
+      "lin_farewell": {
+        "characterId": "lin",
+        "title": "道别",
+        "affinity": { "lin": 1 },
+        "lines": [
+          { "speaker": "lin", "text": "你找到了那束光。" },
+          { "speaker": "lin", "text": "其实它一直跟着你，从你走进雾林的那一刻起。" },
+          { "speaker": "lin", "text": "下次再来，我会在入口等你。" }
+        ]
+      },
+      "zhou_question": {
+        "characterId": "zhou",
+        "title": "星湖的提问",
+        "affinity": { "zhou": 1 },
+        "lines": [
+          { "speaker": "zhou", "text": "问题只有一题——湖里有多少颗星星？" },
+          { "speaker": "旁白", "text": "他依旧没有抬头，木棍在湖面划出一道长长的波纹。" }
+        ]
+      }
+    },
+    "deep-echo": {
+      "chief_signal": {
+        "characterId": "chief",
+        "title": "深渊的回声",
+        "affinity": { "chief": 1 },
+        "lines": [
+          { "speaker": "chief", "text": "如果你听见这段录音，说明回航已经不可能了。" },
+          { "speaker": "chief", "text": "替我……把坐标带回去。他们还在海面上等。" },
+          { "speaker": "旁白", "text": "录音的末尾，是七年前那场事故的最后一次呼吸。" }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,240 @@
+/* ==========================================================================
+   base.css
+   基础样式：变量、重置、页面骨架与移动端适配
+   说明：所有主题变量均以 CSS 自定义属性形式定义，主题文件只需覆盖这些变量。
+   ========================================================================== */
+
+/* 资源版本标记：供 asset-check.js 检测样式是否命中旧缓存（改样式后请同步 +1） */
+:root {
+  --wtg-css-version: 5;
+}
+
+/* --------------------------------------------------------------------------
+   默认主题变量（:root 作为回退值，主题文件通过 [data-theme="..."] 覆盖）
+   -------------------------------------------------------------------------- */
+:root {
+  /* 字体 */
+  --font-ui: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --font-serif: "Songti SC", "STSong", "Noto Serif SC", "SimSun", Georgia, serif;
+
+  /* 界面配色 */
+  --bg: #0f1117;
+  --bg-soft: #161a24;
+  --panel: #1c2230;
+  --panel-2: #232a3b;
+  --text: #e8ecf3;
+  --text-muted: #98a2b6;
+  --accent: #6ea8fe;
+  --accent-strong: #3b82f6;
+  --accent-contrast: #0b1220;
+  --border: #2c3546;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --radius: 16px;
+
+  /* 画布贴图调色板（供 render.js 读取） */
+  --sky-top: #0b1020;
+  --sky-mid: #1a2440;
+  --sky-bottom: #2c3a5c;
+  --ground: #1a2030;
+  --decor-a: #2c3a5c;
+  --decor-b: #16202f;
+  --glow: #6ea8fe;
+}
+
+/* --------------------------------------------------------------------------
+   重置
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 移动端基础保障：禁止横竖屏切换时自动放大字号、避免媒体元素撑破布局、
+   去掉移动端点击高亮，并给触屏元素禁用双击缩放延迟 */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+img,
+canvas,
+iframe,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-ui);
+  color: var(--text);
+  background: var(--bg);
+  /* 页面背景使用多层渐变模拟柔和氛围 */
+  background-image: radial-gradient(1200px 600px at 20% -10%, var(--bg-soft), transparent 60%),
+                    radial-gradient(900px 500px at 100% 110%, var(--bg-soft), transparent 55%);
+  background-attachment: fixed;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* --------------------------------------------------------------------------
+   颗粒质感遮罩（素材：src/img/textures/grain.svg）
+   -------------------------------------------------------------------------- */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background-image: url("../img/textures/grain.svg?v=2");
+  background-size: 200px 200px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+/* --------------------------------------------------------------------------
+   页面骨架
+   -------------------------------------------------------------------------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  padding-top: calc(12px + env(safe-area-inset-top));
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: block;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 8px 20px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-footer {
+  padding: 14px 20px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   画面（screen）切换
+   -------------------------------------------------------------------------- */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 auto;
+  width: 100%;
+  animation: fade-up 0.5s ease both;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   通用面板
+   -------------------------------------------------------------------------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.panel-title {
+  margin: 0 0 6px;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+}
+
+.panel-sub {
+  margin: 0 0 20px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}

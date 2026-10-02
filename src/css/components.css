@@ -1,0 +1,996 @@
+/* ==========================================================================
+   components.css
+   组件样式：按钮、标题画面、章节列表、游戏画面、弹窗等
+   移动端适配写在文件末尾的媒体查询中。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   按钮
+   -------------------------------------------------------------------------- */
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--accent-strong);
+  color: var(--accent-contrast);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--panel-2);
+}
+
+.btn-small {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   标题画面
+   -------------------------------------------------------------------------- */
+.screen-title {
+  position: relative;
+  gap: 0;
+}
+
+.title-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: clamp(220px, 34vh, 340px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+#titleCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.title-content {
+  position: relative;
+  margin-top: -40px;
+  padding: 0 16px;
+  text-align: center;
+  z-index: 2;
+}
+
+.title-kicker {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+}
+
+.title-name {
+  margin: 0 0 10px;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 8vw, 3.4rem);
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.title-sub {
+  margin: 0 auto 22px;
+  max-width: 420px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.title-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   章节列表
+   -------------------------------------------------------------------------- */
+.chapter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chapter-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chapter-item:not(.is-locked):hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.chapter-item:active {
+  transform: scale(0.99);
+}
+
+.chapter-item.is-locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.chapter-item-main {
+  text-align: left;
+}
+
+.chapter-item-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.chapter-item-sub {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.chapter-item-badge {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.chapter-item-badge.is-done {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   游戏画面
+   -------------------------------------------------------------------------- */
+.game-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.game-chapter {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.scene-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 30vh, 300px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+#sceneCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  animation: fade-in 0.4s ease both;
+  cursor: pointer;
+}
+
+.speaker {
+  margin-bottom: 10px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.scene-text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  min-height: 1.9em;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.choice-btn {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.choice-btn:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+
+.choice-btn:active {
+  transform: scale(0.99);
+}
+
+.continue-btn {
+  margin-top: 18px;
+  align-self: flex-start;
+}
+
+.type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.1em;
+  background: var(--accent);
+  animation: blink 0.8s steps(2) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   结局画面
+   -------------------------------------------------------------------------- */
+.panel-end {
+  text-align: center;
+  margin-top: 4vh;
+}
+
+/* --------------------------------------------------------------------------
+   主题弹窗
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  animation: fade-in 0.2s ease both;
+}
+
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  /* 小屏弹窗内部可滚动，避免内容超出屏幕无法操作（dvh 不支持时回退到 vh） */
+  max-height: 88vh;
+  max-height: 88dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  animation: fade-up 0.3s ease both;
+}
+
+.theme-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.theme-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-item:hover {
+  border-color: var(--accent);
+}
+
+.theme-item.is-active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.theme-swatch {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.theme-item-text {
+  text-align: left;
+}
+
+.theme-item-name {
+  font-size: 0.95rem;
+}
+
+.theme-item-desc {
+  margin-top: 3px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   移动端适配
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .app-header {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding: 10px 12px;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .header-actions .btn {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+
+  .app-main {
+    padding: 6px 12px 18px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .game-topbar {
+    align-items: flex-start;
+  }
+
+  .topbar-actions {
+    gap: 6px;
+  }
+
+  .panel,
+  .scene-card {
+    padding: 18px;
+  }
+
+  /* 小屏压低贴图高度，把屏幕留给正文阅读 */
+  .title-canvas-wrap {
+    height: clamp(160px, 26vh, 240px);
+  }
+
+  .scene-canvas-wrap {
+    height: clamp(140px, 22vh, 220px);
+  }
+
+  .scene-text {
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+
+  .btn {
+    padding: 11px 18px;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .modal-card {
+    padding: 18px;
+    max-height: 90vh;
+    max-height: 90dvh;
+  }
+
+  .title-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .title-actions .btn {
+    width: 100%;
+  }
+
+  .title-content {
+    margin-top: -34px;
+  }
+
+  .choice-btn {
+    padding: 13px 15px;
+  }
+
+  /* 存档面板：用户名输入框在 iOS 上小于 16px 会触发聚焦自动放大 */
+  .text-input {
+    font-size: 16px;
+  }
+
+  .save-file-actions .btn,
+  .stories-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .char-affinity {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+}
+
+/* 极窄屏幕进一步收紧 */
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 0.9rem;
+  }
+
+  .panel-title {
+    font-size: 1.3rem;
+  }
+
+  .header-actions .btn {
+    padding: 7px 10px;
+    font-size: 0.78rem;
+  }
+
+  .topbar-actions {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* 触屏设备：保证可点区域足够大（不小于 44px），并去掉双击缩放延迟 */
+@media (pointer: coarse) {
+  .btn,
+  .choice-btn,
+  .slot-item,
+  .chapter-item,
+  .theme-item,
+  .story-card,
+  .user-chip,
+  .save-tab {
+    min-height: 44px;
+  }
+
+  .btn-small {
+    min-height: 40px;
+  }
+
+  /* 自定义故事的删除按钮位于卡片右上角，保持小尺寸以免遮挡卡片内容 */
+  .story-remove {
+    min-height: 32px;
+    padding: 6px 12px;
+  }
+
+  .btn,
+  .choice-btn,
+  .story-card,
+  .chapter-item,
+  .theme-item,
+  .slot-item,
+  .user-chip {
+    touch-action: manipulation;
+  }
+}
+
+/* 桌面端让画面内容居中并留白 */
+@media (min-width: 760px) {
+  .screen-game {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   存档 / 读档面板
+   -------------------------------------------------------------------------- */
+.modal-save {
+  max-width: 520px;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.save-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.save-tab {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.save-tab.is-active {
+  background: var(--accent-strong);
+  color: var(--accent-contrast);
+  border-color: var(--accent-strong);
+}
+
+.text-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
+
+.text-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.user-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.user-chip {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.user-chip.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.slot-list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.slot-item {
+  min-height: 66px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.slot-item:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.slot-item:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.slot-item.is-empty {
+  opacity: 0.6;
+}
+
+.slot-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.slot-num {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.slot-meta {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.slot-time {
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.save-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   轻提示（toast）
+   -------------------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(30px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: 90vw;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 18px;
+  box-shadow: var(--shadow);
+  z-index: 200;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: fade-up 0.25s ease both;
+}
+
+/* 桌面端档位改为五列，单行更紧凑 */
+@media (min-width: 600px) {
+  .slot-list {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   故事选择画面
+   -------------------------------------------------------------------------- */
+.stories-head {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.stories-title {
+  margin: 0 0 6px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  letter-spacing: 0.06em;
+}
+
+.stories-sub {
+  margin: 0 0 18px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.story-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.story-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.story-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.story-card:active {
+  transform: scale(0.99);
+}
+
+.story-swatch {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.story-card-text {
+  flex: 1 1 auto;
+}
+
+.story-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.story-card-sub {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.story-card-desc {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.story-card-theme {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 760px) {
+  .story-list {
+    max-width: 640px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   故事选择页：导入 / 编辑器入口 / 自定义故事删除
+   -------------------------------------------------------------------------- */
+.stories-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.story-li {
+  position: relative;
+  list-style: none;
+}
+
+.story-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.story-remove:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   人物面板（人设 + 好感度 + 攻略）
+   -------------------------------------------------------------------------- */
+.char-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.char-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+}
+
+.char-avatar {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.char-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.char-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.char-name {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+}
+
+.char-role {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.char-personality {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.char-desc {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.char-affinity {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.affinity-track {
+  flex: 1 1 auto;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.affinity-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.affinity-label {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.affinity-label.is-done {
+  color: var(--accent);
+  font-weight: 600;
+}

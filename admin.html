@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>管理后台</title>
+  <link rel="stylesheet" href="src/css/admin.css?v=5">
+</head>
+<body>
+  <!-- 登录界面 -->
+  <div class="login-wrap" id="loginView">
+    <div class="login-card">
+      <h1 class="login-title">管理后台</h1>
+      <p class="login-sub">请输入管理员账号与密码（默认账号 admin）</p>
+      <label class="mgmt-field">
+        <span>账号</span>
+        <input class="mgmt-input" id="loginUser" type="text" autocomplete="username">
+      </label>
+      <label class="mgmt-field">
+        <span>密码</span>
+        <input class="mgmt-input" id="loginPass" type="password" autocomplete="current-password">
+      </label>
+      <p class="mgmt-error is-hidden" id="loginError">账号或密码错误</p>
+      <button class="mgmt-btn mgmt-btn-primary mgmt-btn-block" id="btnLogin" type="button">登录</button>
+    </div>
+  </div>
+
+  <!-- 后台主界面 -->
+  <div class="is-hidden" id="dashboard">
+    <header class="mgmt-header">
+      <div class="mgmt-brand">管理后台</div>
+      <div class="mgmt-actions">
+        <a class="mgmt-btn mgmt-btn-ghost" href="index.html">返回游戏</a>
+        <a class="mgmt-btn mgmt-btn-ghost" href="edit.html">编辑器</a>
+        <button class="mgmt-btn mgmt-btn-ghost" id="btnLogout" type="button">退出登录</button>
+      </div>
+    </header>
+
+    <div class="mgmt-tabs">
+      <button class="mgmt-tab is-active" data-tab="stories" type="button">故事管理</button>
+      <button class="mgmt-tab" data-tab="saves" type="button">存档管理</button>
+      <button class="mgmt-tab" data-tab="chars" type="button">人物</button>
+      <button class="mgmt-tab" data-tab="review" type="button">审核发布</button>
+    </div>
+
+    <main class="mgmt-main">
+      <!-- 故事管理 -->
+      <section id="tab-stories">
+        <h2 class="mgmt-section-title">故事管理</h2>
+        <p class="mgmt-hint">内置故事不可删除；自定义故事可导出或删除（删除时同时清理其存档）。</p>
+        <div id="storyAdminList"></div>
+
+        <h3 class="mgmt-sub-title">编辑器草稿</h3>
+        <div id="draftAdminList"></div>
+      </section>
+
+      <!-- 存档管理 -->
+      <section id="tab-saves" class="is-hidden">
+        <h2 class="mgmt-section-title">存档管理</h2>
+        <div class="mgmt-toolbar">
+          <label class="mgmt-field mgmt-field-inline">
+            <span>选择故事</span>
+            <select class="mgmt-input" id="saveStorySelect"></select>
+          </label>
+          <button class="mgmt-btn mgmt-btn-danger" id="btnClearAllSaves" type="button">清空全部存档</button>
+        </div>
+        <div id="saveAdmin"></div>
+      </section>
+
+      <!-- 人物 -->
+      <section id="tab-chars" class="is-hidden">
+        <h2 class="mgmt-section-title">人物（人设 / 好感度 / 攻略）</h2>
+        <p class="mgmt-hint">展示各故事的人物设定、初始好感度与攻略目标。</p>
+        <div id="charAdminList"></div>
+      </section>
+
+      <!-- 审核发布 -->
+      <section id="tab-review" class="is-hidden">
+        <h2 class="mgmt-section-title">审核发布</h2>
+        <p class="mgmt-hint">投稿先进入待审核队列，通过后才会写入服务器并对游戏生效。</p>
+        <div class="mgmt-toolbar">
+          <button class="mgmt-btn mgmt-btn-ghost" id="btnRefreshReview" type="button">刷新列表</button>
+        </div>
+        <div id="reviewList"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="mgmt-toast is-hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <!--
+    加载故事注册表与内置故事数据，用于在后台列出故事。
+    自定义故事与存档从 localStorage 读取（与游戏/编辑器共享同一份数据）。
+  -->
+  <script src="src/js/asset-check.js?v=1"></script>
+  <script src="src/js/api.js?v=5"></script>
+  <script src="src/js/data/chapters.js?v=3"></script>
+  <script src="src/js/data/stories/dawn-realm.js?v=3"></script>
+  <script src="src/js/data/stories/deep-echo.js?v=3"></script>
+  <script src="src/js/admin.js?v=4"></script>
+</body>
+</html>

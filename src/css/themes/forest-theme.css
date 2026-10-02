@@ -1,0 +1,30 @@
+/* ==========================================================================
+   themes/forest-theme.css
+   主题：翡翠
+   深绿森林风格，翠绿色调配色。
+   ========================================================================== */
+
+[data-theme="forest-theme"] {
+  /* 界面配色：深绿翡翠风格 */
+  --bg: #0c1512;
+  --bg-soft: #12211b;
+  --panel: #16271f;
+  --panel-2: #1d3328;
+  --text: #e2f0e6;
+  --text-muted: #8fb39a;
+  --accent: #54c07e;
+  --accent-strong: #2f9e63;
+  --accent-contrast: #08130e;
+  --border: #274639;
+  --shadow: 0 12px 32px rgba(6, 16, 10, 0.5);
+  --radius: 16px;
+
+  /* 画布贴图调色板：森林与翡翠 */
+  --sky-top: #0a1c14;
+  --sky-mid: #143423;
+  --sky-bottom: #2a5c3a;
+  --ground: #0e1f16;
+  --decor-a: #2a5c3a;
+  --decor-b: #16301f;
+  --glow: #54c07e;
+}

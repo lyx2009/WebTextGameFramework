@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>故事编辑工具</title>
+  <link rel="stylesheet" href="src/css/editor.css?v=7">
+</head>
+<body>
+  <header class="ed-header">
+    <div class="ed-brand">故事编辑工具</div>
+    <div class="ed-actions">
+      <button class="btn btn-ghost btn-view is-active" id="btnFlowView" type="button">流程图</button>
+      <button class="btn btn-ghost btn-view" id="btnFormView" type="button">表单</button>
+      <button class="btn btn-ghost" id="btnGuide" type="button">编写指南</button>
+      <a class="btn btn-ghost" href="rules.json?v=3" download="rules.json">规则文档</a>
+      <a class="btn btn-ghost" href="dialog.json?v=3" download="dialog.json">对话文档</a>
+      <button class="btn btn-ghost" id="btnNewStory" type="button">新建故事</button>
+      <button class="btn btn-ghost" id="btnSaveDraft" type="button">保存草稿</button>
+      <button class="btn btn-ghost" id="btnImport" type="button">导入故事</button>
+      <button class="btn btn-ghost" id="btnImportDialog" type="button">导入对话</button>
+      <button class="btn btn-primary" id="btnExportJson" type="button">导出 JSON</button>
+      <button class="btn btn-primary" id="btnExportJs" type="button">导出 JS</button>
+      <button class="btn btn-primary" id="btnSubmitStory" type="button">提交故事审核</button>
+      <span class="ed-api-status" id="apiStatus">检测后端…</span>
+      <a class="btn btn-ghost" href="index.html">返回游戏</a>
+      <input id="fileInput" type="file" accept=".json,application/json" class="is-hidden">
+      <input id="dialogFileInput" type="file" accept=".json,application/json" class="is-hidden">
+      <input id="charImageFile" type="file" accept="image/*" class="is-hidden">
+      <input id="storyBgFile" type="file" accept="image/*" class="is-hidden">
+      <input id="sceneBgFile" type="file" accept="image/*" class="is-hidden">
+      <input id="flowBgFile" type="file" accept="image/*" class="is-hidden">
+    </div>
+  </header>
+
+  <!-- 表单编辑器（原始编辑器，默认隐藏；流程图视图为默认） -->
+  <div id="formView" class="is-hidden">
+  <main class="ed-layout">
+    <!-- 左侧：故事库 / 草稿 / 故事信息 / 章节 -->
+    <aside class="ed-side">
+      <section class="ed-block">
+        <h3 class="ed-block-title">故事库（载入 / 预览）</h3>
+        <p class="ed-hint">自动汇总内置与自定义故事，可一键载入编辑或在游戏内预览。</p>
+        <ul class="ed-list" id="libraryList"></ul>
+      </section>
+
+      <section class="ed-block">
+        <h3 class="ed-block-title">草稿</h3>
+        <ul class="ed-list" id="draftList"></ul>
+      </section>
+
+      <section class="ed-block">
+        <h3 class="ed-block-title">故事信息</h3>
+        <label class="ed-field">
+          <span>标题</span>
+          <input class="text-input" id="fTitle" type="text" placeholder="故事标题">
+        </label>
+        <label class="ed-field">
+          <span>副标题</span>
+          <input class="text-input" id="fSubtitle" type="text" placeholder="副标题（可选）">
+        </label>
+        <label class="ed-field">
+          <span>简介</span>
+          <textarea class="text-input" id="fDescription" rows="3" placeholder="故事简介"></textarea>
+        </label>
+        <label class="ed-field">
+          <span>主题</span>
+          <select class="text-input" id="fTheme"></select>
+        </label>
+        <div class="ed-field">
+          <span>剧情背景图（可选）</span>
+          <div class="ed-image-row">
+            <img class="ed-image-preview is-hidden" id="storyBgPreview" alt="剧情背景预览">
+            <div class="ed-image-actions">
+              <button class="btn btn-ghost btn-small" id="btnStoryBgUpload" type="button">上传背景</button>
+              <button class="btn btn-ghost btn-small" id="btnStoryBgClear" type="button">清除</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ed-block">
+        <h3 class="ed-block-title">章节（拖拽排序）</h3>
+        <ul class="ed-list" id="chapterList"></ul>
+        <button class="btn btn-ghost btn-block" id="btnAddChapter" type="button">新增章节</button>
+      </section>
+    </aside>
+
+    <!-- 右侧：章节设置 / 场景列表 / 场景编辑 -->
+    <section class="ed-main">
+      <div class="ed-block">
+        <h3 class="ed-block-title">人物（人设 / 好感度 / 攻略）</h3>
+        <ul class="ed-list" id="characterList"></ul>
+        <button class="btn btn-ghost btn-block" id="btnAddCharacter" type="button">新增人物</button>
+      </div>
+
+      <section class="ed-block ed-scene-form is-hidden" id="characterForm">
+        <h3 class="ed-block-title">人物编辑 <span class="ed-id" id="characterFormId"></span></h3>
+        <div class="ed-row">
+          <label class="ed-field"><span>姓名</span><input class="text-input" id="fCharName" type="text" placeholder="姓名"></label>
+          <label class="ed-field"><span>身份</span><input class="text-input" id="fCharRole" type="text" placeholder="身份"></label>
+        </div>
+        <label class="ed-field"><span>性格</span><input class="text-input" id="fCharPersonality" type="text" placeholder="性格标签"></label>
+        <label class="ed-field"><span>人设简介</span><textarea class="text-input" id="fCharDesc" rows="2" placeholder="人设简介"></textarea></label>
+        <div class="ed-field">
+          <span>人物图片（可选）</span>
+          <div class="ed-image-row">
+            <img class="ed-image-preview is-hidden" id="charImagePreview" alt="人物图片预览">
+            <div class="ed-image-actions">
+              <button class="btn btn-ghost btn-small" id="btnCharImageUpload" type="button">上传图片</button>
+              <button class="btn btn-ghost btn-small" id="btnCharImageClear" type="button">清除</button>
+            </div>
+          </div>
+        </div>
+        <div class="ed-row">
+          <label class="ed-field"><span>初始好感度</span><input class="text-input" id="fCharAffinity" type="number" step="1" value="0"></label>
+          <label class="ed-field"><span>攻略目标</span><input class="text-input" id="fCharTarget" type="number" step="1" value="1"></label>
+        </div>
+        <div class="ed-scene-actions">
+          <button class="btn btn-ghost btn-small" id="btnDeleteCharacter" type="button">删除人物</button>
+        </div>
+      </section>
+
+      <div class="ed-block">
+        <h3 class="ed-block-title">对话（dialog.json）</h3>
+        <p class="ed-hint">按「故事 id → 对话 id」组织；行内 speaker 用角色 id 区分角色，旁白填「旁白」。</p>
+        <ul class="ed-list" id="dialogueList"></ul>
+        <button class="btn btn-ghost btn-block" id="btnAddDialogue" type="button">新建对话</button>
+        <div class="ed-scene-actions">
+          <button class="btn btn-ghost btn-small" id="btnImportDialogLocal" type="button">导入对话文件</button>
+          <button class="btn btn-ghost btn-small" id="btnExportDialog" type="button">导出对话 JSON</button>
+          <button class="btn btn-ghost btn-small" id="btnSubmitDialog" type="button">提交对话审核</button>
+        </div>
+      </div>
+
+      <section class="ed-block ed-scene-form is-hidden" id="dialogueForm">
+        <h3 class="ed-block-title">对话编辑 <span class="ed-id" id="dialogueFormId"></span></h3>
+        <div class="ed-row">
+          <label class="ed-field"><span>对话 id</span><input class="text-input" id="fDlgId" type="text" placeholder="例如 lin_intro"></label>
+          <label class="ed-field"><span>主角色 id</span><input class="text-input" id="fDlgChar" type="text" placeholder="例如 lin"></label>
+        </div>
+        <div class="ed-row">
+          <label class="ed-field"><span>标题</span><input class="text-input" id="fDlgTitle" type="text" placeholder="对话标题"></label>
+          <label class="ed-field"><span>好感度（如 lin:1）</span><input class="text-input" id="fDlgAffinity" type="text" placeholder="lin:1"></label>
+        </div>
+        <div class="ed-choices-head">
+          <h4 class="ed-subtitle">对话行</h4>
+          <div class="ed-choices-actions">
+            <button class="btn btn-ghost btn-small" id="btnAddLine" type="button">添加一行</button>
+          </div>
+        </div>
+        <ul class="ed-list" id="lineList"></ul>
+        <div class="ed-scene-actions">
+          <button class="btn btn-ghost btn-small" id="btnDeleteDialogue" type="button">删除对话</button>
+        </div>
+      </section>
+
+      <div class="ed-block">
+        <h3 class="ed-block-title">章节设置</h3>
+        <div class="ed-row">
+          <label class="ed-field">
+            <span>章节标题</span>
+            <input class="text-input" id="fChapterTitle" type="text" placeholder="章节标题">
+          </label>
+          <label class="ed-field">
+            <span>章节副标题</span>
+            <input class="text-input" id="fChapterSubtitle" type="text" placeholder="章节副标题（可选）">
+          </label>
+        </div>
+      </div>
+
+      <div class="ed-block">
+        <h3 class="ed-block-title">场景（拖拽排序）</h3>
+        <p class="ed-hint">点击场景可编辑；拖拽手柄或使用上移 / 下移调整顺序。</p>
+        <ul class="ed-list" id="sceneList"></ul>
+        <button class="btn btn-ghost btn-block" id="btnAddScene" type="button">新增场景</button>
+      </div>
+
+      <section class="ed-block ed-scene-form is-hidden" id="sceneForm">
+        <h3 class="ed-block-title">场景编辑 <span class="ed-id" id="sceneFormId"></span></h3>
+        <label class="ed-field">
+          <span>说话人</span>
+          <input class="text-input" id="fSpeaker" type="text" placeholder="例如：旁白">
+        </label>
+        <label class="ed-field">
+          <span>正文</span>
+          <textarea class="text-input" id="fText" rows="4" placeholder="正文内容，可用换行分段"></textarea>
+        </label>
+        <div class="ed-row">
+          <label class="ed-field">
+            <span>贴图</span>
+            <select class="text-input" id="fTexture"></select>
+          </label>
+          <label class="ed-field">
+            <span>无选项时跳转</span>
+            <select class="text-input" id="fNext"></select>
+          </label>
+        </div>
+
+        <label class="ed-field">
+          <span>对话 id（可选，对应 dialog.json）</span>
+          <input class="text-input" id="fDialogue" type="text" placeholder="例如 lin_intro">
+        </label>
+
+        <div class="ed-field">
+          <span>场景背景图（可选，覆盖剧情背景）</span>
+          <div class="ed-image-row">
+            <img class="ed-image-preview is-hidden" id="sceneBgPreview" alt="场景背景预览">
+            <div class="ed-image-actions">
+              <button class="btn btn-ghost btn-small" id="btnSceneBgUpload" type="button">上传背景</button>
+              <button class="btn btn-ghost btn-small" id="btnSceneBgClear" type="button">清除</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ed-choices-head">
+          <h4 class="ed-subtitle">选项（分支）</h4>
+          <div class="ed-choices-actions">
+            <button class="btn btn-ghost btn-small" id="btnAddChoice" type="button">添加选项</button>
+            <button class="btn btn-ghost btn-small" id="btnBranch" type="button">新建分支</button>
+          </div>
+        </div>
+        <ul class="ed-list" id="choiceList"></ul>
+
+        <div class="ed-scene-actions">
+          <button class="btn btn-ghost btn-small" id="btnSetStart" type="button">设为起始场景</button>
+          <button class="btn btn-ghost btn-small" id="btnDeleteScene" type="button">删除场景</button>
+        </div>
+      </section>
+    </section>
+  </main>
+  </div>
+
+  <!-- 流程图视图（默认） -->
+  <div id="flowView" class="flow-view">
+    <div class="flow-toolbar">
+      <div class="flow-toolbar-left">
+        <label class="flow-toolbar-label" for="flowChapterSelect">章节</label>
+        <select class="text-input flow-chapter-select" id="flowChapterSelect" title="切换查看不同章节的流程图"></select>
+      </div>
+      <div class="flow-toolbar-right">
+        <button class="btn btn-ghost btn-small" id="btnFlowHelp" type="button" title="查看流程图每个功能是做什么的">使用说明</button>
+        <button class="btn btn-ghost btn-small" id="btnFlowAddScene" type="button" title="在当前章节新增一个场景">新增场景</button>
+        <button class="btn btn-ghost btn-small" id="btnFlowZoomIn" type="button" title="放大画布">放大</button>
+        <button class="btn btn-ghost btn-small" id="btnFlowZoomOut" type="button" title="缩小画布">缩小</button>
+        <button class="btn btn-ghost btn-small" id="btnFlowReset" type="button" title="回到初始视角（手机上会居中显示）">重置</button>
+        <button class="btn btn-ghost btn-small" id="btnFlowFit" type="button" title="把整张流程图缩放到正好看得全">适配</button>
+      </div>
+    </div>
+
+    <div class="flow-canvas" id="flowCanvas">
+      <div class="flow-viewport" id="flowViewport">
+        <svg class="flow-edges" id="flowEdges"></svg>
+      </div>
+    </div>
+
+    <p class="flow-hint">拖动「＋」连线 · 拖节点移动 · 空白处平移 · 滚轮缩放 · 点击节点编辑</p>
+
+    <aside class="flow-detail is-hidden" id="flowDetail">
+      <div class="flow-detail-head">
+        <span class="flow-detail-title" id="flowDetailTitle"></span>
+        <button class="btn btn-ghost btn-small" id="btnFlowDetailClose" type="button">关闭</button>
+      </div>
+      <div class="flow-detail-body" id="flowDetailBody">
+        <label class="ed-field"><span>说话人</span><input class="text-input" id="fFlowSpeaker" type="text" placeholder="例如：旁白"></label>
+        <label class="ed-field"><span>正文</span><textarea class="text-input" id="fFlowText" rows="4" placeholder="正文内容，可用换行分段"></textarea></label>
+        <label class="ed-field"><span>直接跳转（无选项时）</span><select class="text-input" id="fFlowNext"></select></label>
+        <label class="ed-field"><span>对话（dialog.json）</span><select class="text-input" id="fFlowDialogue"></select></label>
+        <div class="flow-dialogue-preview is-hidden" id="flowDialoguePreview"></div>
+        <div class="ed-field">
+          <span>场景背景图（可选）</span>
+          <div class="ed-image-row">
+            <img class="ed-image-preview is-hidden" id="flowBgPreview" alt="背景预览">
+            <div class="ed-image-actions">
+              <button class="btn btn-ghost btn-small" id="btnFlowBgUpload" type="button">上传背景</button>
+              <button class="btn btn-ghost btn-small" id="btnFlowBgClear" type="button">清除</button>
+            </div>
+          </div>
+        </div>
+        <div class="flow-detail-section">
+          <h5>选项（分支）</h5>
+          <div id="flowDetailChoices"></div>
+        </div>
+        <div class="ed-scene-actions">
+          <button class="btn btn-ghost btn-small" id="btnFlowEditDialogue" type="button">编辑对话内容</button>
+          <button class="btn btn-ghost btn-small" id="btnFlowDeleteScene" type="button">删除该场景</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 编写指南弹窗 -->
+  <div class="modal is-hidden" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <div class="modal-backdrop" id="guideBackdrop"></div>
+    <div class="modal-card guide-card">
+      <h3 class="modal-title" id="guideTitle">故事文件编写指南</h3>
+      <div class="guide-body">
+<pre class="guide-pre">故事对象结构（JSON / JS）：
+{
+  id: "story-id",              // 唯一标识，用于存档隔离
+  title: "故事标题",
+  subtitle: "副标题",
+  description: "简介",
+  theme: "test-theme",         // 主题 id：test-theme/ocean-theme/night-theme/dusk-theme/forest-theme
+  chapters: [ ... ]            // 章节数组
+}
+
+章节对象：
+{
+  id: "ch1",
+  title: "第一章标题",
+  subtitle: "副标题",
+  startScene: "s1",            // 起始场景 id
+  scenes: { "s1": {...}, ... } // 场景表（以 id 为键）
+}
+
+场景对象：
+{
+  speaker: "旁白",
+  text: "正文，可用 \n 换行",
+  texture: "dawn",             // 贴图：dawn/forest/night/cave/lake/ocean/abyss
+  next: "s2",                  // 无选项时的跳转，可用 "__chapterEnd__" 表示章节结束
+  choices: [ ... ]             // 选项数组（有选项时优先显示选项）
+}
+
+选项对象：
+{
+  text: "选项文案",
+  next: "s3",                  // 跳转场景 id 或 "__chapterEnd__"
+  set: "hasItem",              // 可选：点击后写入的标记
+  require: "hasItem"           // 可选：需要已持有该标记才显示
+}
+
+完整示例：
+window.StoryRegistry.register({
+  id: "my-story",
+  title: "我的故事",
+  subtitle: "示例",
+  description: "一段示例",
+  theme: "test-theme",
+  chapters: [{
+    id: "ch1",
+    title: "第一章",
+    subtitle: "",
+    startScene: "s1",
+    scenes: {
+      "s1": {
+        speaker: "旁白",
+        text: "你醒来了。",
+        texture: "dawn",
+        choices: [
+          { text: "继续前进", next: "s2" },
+          { text: "结束", next: "__chapterEnd__" }
+        ]
+      },
+      "s2": {
+        speaker: "旁白",
+        text: "故事仍在继续。",
+        texture: "forest",
+        next: "__chapterEnd__"
+      }
+    }
+  }]
+});
+
+说明：
+1. "__chapterEnd__" 表示本章结束并进入下一章；最后一章结束即通关。
+2. 方式 A：在编辑工具中编辑后「导出 JS」，把文件放到 src/js/data/stories/ 下，
+   并在 index.html 底部追加一行：
+   &lt;script src="src/js/data/stories/你的文件.js"&gt;&lt;/script&gt;
+3. 方式 B：在编辑工具中「导出 JSON」，再到 index.html 故事页「导入故事」直接游玩。
+4. 编辑器额外维护可选的 chapter.sceneOrder 数组用于场景排序，游戏引擎会忽略它。
+5. 人物：故事可携带 characters 数组，字段含 id/name/role/personality/description/affinity/target。
+6. 好感度：选项可用 affinity（如 { lin: 1 }）增减好感，用 requireAffinity（如 { lin: 2 }）做显示门槛。
+7. 对话：统一写入 dialog.json，按「故事 id -> 对话 id」组织，行内 speaker 用角色 id 区分角色；
+   场景或选项可用 dialogue 字段引用对话 id。编辑器中可用「导入对话」把现成的 dialog.json
+   载入继续编辑（也支持只含当前故事对话表的简化文件）。
+8. 部署提示：index.html / edit.html / admin.html 中的 CSS、JS 链接均带 ?v= 版本号，
+   修改已有静态资源后请递增该版本号，否则浏览器或 CDN 可能继续使用旧缓存，
+   出现「页面结构已更新、样式仍是旧的」问题。</pre>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btnCloseGuide" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 流程图使用说明 -->
+  <div class="modal is-hidden" id="flowHelpModal" role="dialog" aria-modal="true" aria-labelledby="flowHelpTitle">
+    <div class="modal-backdrop" id="flowHelpBackdrop"></div>
+    <div class="modal-card guide-card">
+      <h3 class="modal-title" id="flowHelpTitle">流程图使用说明</h3>
+      <div class="guide-body">
+        <ul class="flow-help-list">
+          <li><b>方块 ＝ 一个场景</b>：方块里显示场景编号、说话人、正文前几行，以及它通向哪些场景。带「对话 xxx」标签，表示这个场景会播放一段对话。</li>
+          <li><b>箭头 ＝ 剧情走向</b>：从一个场景指向下一个场景。一个场景有多条箭头时，就是分支（选项）。</li>
+          <li><b>点一下方块 ＝ 开始编辑</b>：右侧面板可以直接改说话人、正文；选「直接跳转」（没有选项时走这里）；关联或查看对话；增删改每个选项；也可以上传 / 清除这张场景的背景图。</li>
+          <li><b>拖方块底部的「＋」＝ 连线</b>：拖到另一个方块上松手，会自动给这个场景加一个选项并指向对方；松手后在右侧填好选项文案即可。</li>
+          <li><b>拖动方块本身 ＝ 改位置</b>：只影响这张图的排版，不影响剧情。</li>
+          <li><b>拖动空白处 ＝ 平移画布</b>；<b>滚轮 / 放大 / 缩小 ＝ 缩放</b>；<b>重置</b> 回到初始视角；<b>适配</b> 把整张图缩放到正好看得全。</li>
+          <li><b>新增场景</b>＝在当前章节加一个新场景；<b>删除该场景</b>＝删除选中的场景（其它指向它的跳转会被清空）。</li>
+          <li><b>使用说明</b>＝就是本页；<b>表单</b>＝切回原来的表单编辑器，内容和流程图完全一致，只是换一种编辑方式。</li>
+          <li><b>顶部「章节」下拉</b>＝在章节之间切换；手机上画布会自动改成「从上到下」的单列排版，更方便手指操作。</li>
+          <li><b>小提示</b>：节点位置只保存在本机浏览器，不会写进故事文件，也不会影响游戏里的剧情。</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btnCloseFlowHelp" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 预览弹窗 -->
+  <div class="modal is-hidden" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+    <div class="modal-backdrop" id="previewBackdrop"></div>
+    <div class="modal-card preview-card">
+      <div class="preview-head">
+        <span class="preview-title" id="previewTitle">预览</span>
+        <button class="btn btn-ghost btn-small" id="btnClosePreview" type="button">关闭</button>
+      </div>
+      <iframe class="preview-frame" id="previewFrame" src="about:blank" title="故事预览"></iframe>
+    </div>
+  </div>
+
+  <div class="toast is-hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 先加载故事注册表与内置故事，使编辑器可自动导入并预览 -->
+  <script src="src/js/asset-check.js?v=1"></script>
+  <script src="src/js/api.js?v=5"></script>
+  <script src="src/js/data/chapters.js?v=3"></script>
+  <script src="src/js/data/stories/dawn-realm.js?v=3"></script>
+  <script src="src/js/data/stories/deep-echo.js?v=3"></script>
+  <script src="src/js/editor.js?v=8"></script>
+</body>
+</html>

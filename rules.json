@@ -1,0 +1,169 @@
+{
+  "format": "wtg-rules",
+  "version": 2,
+  "title": "故事文件编写规则",
+  "story": {
+    "description": "故事对象结构（JSON / JS）",
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "故事唯一标识，用于存档隔离。" },
+      "title": { "type": "string", "required": true, "description": "故事标题。" },
+      "subtitle": { "type": "string", "required": false, "description": "副标题。" },
+      "description": { "type": "string", "required": false, "description": "故事简介。" },
+      "theme": { "type": "string", "required": true, "description": "该故事使用的主题 id，取值见 enums.themes。" },
+      "background": { "type": "string", "required": false, "description": "可选，剧情背景图（data URL）。在编辑器上传后自动生成；作为所有场景的默认背景。" },
+      "characters": { "type": "array", "required": false, "description": "人物数组（人设 + 好感度 + 攻略目标），结构见 character。" },
+      "chapters": { "type": "array", "required": true, "description": "章节数组。" }
+    }
+  },
+  "character": {
+    "description": "人物对象结构（人设系统）",
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "角色唯一标识，用于好感度与对话的引用。" },
+      "name": { "type": "string", "required": true, "description": "角色姓名（界面显示用）。" },
+      "role": { "type": "string", "required": false, "description": "身份 / 定位，例如「雾之引路人」。" },
+      "personality": { "type": "string", "required": false, "description": "性格标签，例如「温柔而疏离」。" },
+      "description": { "type": "string", "required": false, "description": "人设简介。" },
+      "image": { "type": "string", "required": false, "description": "可选，人物图片（data URL）。在编辑器上传后自动压缩生成，游戏中显示在人物面板。" },
+      "affinity": { "type": "number", "required": false, "description": "初始好感度，缺省为 0。" },
+      "target": { "type": "number", "required": false, "description": "攻略成功所需好感度；达到该值视为攻略成功。" }
+    }
+  },
+  "chapter": {
+    "description": "章节对象结构",
+    "fields": {
+      "id": { "type": "string", "required": true, "description": "章节唯一标识。" },
+      "title": { "type": "string", "required": true, "description": "章节标题。" },
+      "subtitle": { "type": "string", "required": false, "description": "章节副标题。" },
+      "startScene": { "type": "string", "required": true, "description": "进入该章节时的起始场景 id。" },
+      "scenes": { "type": "object", "required": true, "description": "场景表，以场景 id 为键。" },
+      "sceneOrder": { "type": "array", "required": false, "description": "可选，场景 id 排序数组，仅编辑器使用，游戏引擎忽略。" }
+    }
+  },
+  "scene": {
+    "description": "场景对象结构",
+    "fields": {
+      "speaker": { "type": "string", "required": false, "description": "说话人，缺省为旁白。" },
+      "text": { "type": "string", "required": true, "description": "正文内容，可用 \\n 换行分段。" },
+      "texture": { "type": "string", "required": false, "description": "画布贴图种类，取值见 enums.textureKinds。" },
+      "next": { "type": "string", "required": false, "description": "无选项时的跳转场景 id；可用 __chapterEnd__ 表示章节结束。" },
+      "choices": { "type": "array", "required": false, "description": "选项数组；存在可见选项时优先显示选项。" },
+      "dialogue": { "type": "string", "required": false, "description": "可选，正文播放完后触发的对话 id，对应 dialog.json 中的条目。" },
+      "background": { "type": "string", "required": false, "description": "可选，该场景的背景图（data URL），优先于故事的 background。在编辑器上传后自动生成。" }
+    }
+  },
+  "choice": {
+    "description": "选项对象结构",
+    "fields": {
+      "text": { "type": "string", "required": true, "description": "选项文案。" },
+      "next": { "type": "string", "required": true, "description": "跳转场景 id，或 __chapterEnd__ 表示章节结束。" },
+      "set": { "type": "string", "required": false, "description": "可选，点击该选项后写入的标记，用于条件分支。" },
+      "require": { "type": "string", "required": false, "description": "可选，需要已持有该标记才会显示该选项。" },
+      "affinity": { "type": "object", "required": false, "description": "可选，点击后好感度增减，形如 {\"lin\": 1, \"zhou\": -1}。" },
+      "requireAffinity": { "type": "object", "required": false, "description": "可选，需要某角色好感度达到指定值才显示，形如 {\"lin\": 2}。" },
+      "dialogue": { "type": "string", "required": false, "description": "可选，点击该选项后触发的对话 id。" }
+    }
+  },
+  "dialog": {
+    "description": "对话文件（dialog.json）结构",
+    "file": "dialog.json",
+    "fields": {
+      "format": { "type": "string", "required": true, "description": "固定为 wtg-dialog。" },
+      "version": { "type": "number", "required": true, "description": "文件版本号。" },
+      "dialogues": { "type": "object", "required": true, "description": "以故事 id 为键，再以对话 id 为键的对话表。" }
+    },
+    "entry": {
+      "characterId": { "type": "string", "required": false, "description": "主角色标识，用于区分对话所属角色。" },
+      "title": { "type": "string", "required": false, "description": "对话标题。" },
+      "affinity": { "type": "object", "required": false, "description": "对话播放完后获得的好感度，形如 {\"lin\": 1}。" },
+      "lines": { "type": "array", "required": true, "description": "对话行数组；每行 { speaker, text }，speaker 为角色 id 或「旁白」。" }
+    }
+  },
+  "enums": {
+    "textureKinds": ["dawn", "forest", "night", "cave", "lake", "ocean", "abyss"],
+    "themes": [
+      { "id": "test-theme", "name": "测试主题 · 晨雾" },
+      { "id": "ocean-theme", "name": "深海" },
+      { "id": "night-theme", "name": "星夜" },
+      { "id": "dusk-theme", "name": "暮色" },
+      { "id": "forest-theme", "name": "翡翠" }
+    ],
+    "speakerSpecial": ["旁白", "narrator"]
+  },
+  "semantics": {
+    "chapterEnd": "__chapterEnd__ 表示本章结束并进入下一章；最后一章结束即通关。",
+    "set": "点击选项后写入的标记，可被其它选项的 require 使用，实现条件分支。",
+    "require": "需要已持有该标记的选项才会显示。",
+    "affinity": "好感度增量，作用于对应角色；通过选项或对话获得，可正可负。",
+    "requireAffinity": "需要某角色好感度达到指定值才会显示该选项。",
+    "dialogue": "对话 id，指向 dialog.json 中对应故事下的对话条目；播放后结算其好感度。",
+    "sceneOrder": "编辑器额外维护的可选数组，用于场景排序，游戏引擎会忽略该字段。"
+  },
+  "usage": {
+    "js": "将故事 JS 文件放入 src/js/data/stories/ 目录，并在 index.html 底部追加 <script src=\"src/js/data/stories/你的文件.js\"></script>。",
+    "json": "在编辑工具中「导出 JSON」，再到 index.html 故事选择页点击「导入故事」即可游玩。",
+    "dialog": "对话统一写入根目录 dialog.json，按「故事 id -> 对话 id」组织，行内 speaker 使用角色 id 区分角色。编辑器中可用「导入对话」载入现成的 dialog.json 继续编辑。",
+    "publish": "在编辑器点击「提交故事审核」或「提交对话审核」，内容先进入待审核队列；管理员在 admin.html 的「审核发布」标签页通过后，才会写入服务器并对游戏生效。此功能需要运行 server.js。"
+  },
+  "publish": {
+    "description": "发布与审核流程",
+    "steps": [
+      "1. 作者在 edit.html 中编辑故事或对话，点击「提交故事审核」/「提交对话审核」。",
+      "2. 内容写入服务器 storage/pending/ 目录，状态为待审核。",
+      "3. 管理员在 admin.html 的「审核发布」中查看摘要，选择通过或驳回。",
+      "4. 通过后：故事写入 storage/stories/，对话合并进 storage/dialogs/；驳回则删除该投稿。",
+      "5. 游戏通过 /api/stories 与 /api/dialogs 读取已发布内容，作者与玩家无需改动任何源码。"
+    ],
+    "submissionKinds": {
+      "story": "payload 为一个完整故事对象（结构见本文件 story / chapter / scene / choice 各节）。",
+      "dialog": "payload 形如 { \"storyId\": \"故事id\", \"dialogues\": { \"对话id\": 对话条目 } }。"
+    },
+    "api": {
+      "GET /api/health": "健康检查，用于前端判断后端是否可用。",
+      "POST /api/auth/login": "管理员登录，返回 token。",
+      "GET /api/stories": "已发布故事列表（公开）。",
+      "GET /api/dialogs": "已发布对话集合（公开）。",
+      "POST /api/submissions": "提交故事或对话（公开，进入待审核）。",
+      "GET /api/admin/submissions": "待审核列表（需管理员 token）。",
+      "POST /api/admin/submissions/<id>/approve": "审核通过并发布（需管理员 token）。",
+      "POST /api/admin/submissions/<id>/reject": "审核驳回并删除（需管理员 token）。",
+      "DELETE /api/admin/stories/<id>": "删除已发布故事（需管理员 token）。"
+    },
+    "deployment": "运行 node server.js（默认端口 8090，可用 PORT 覆盖；账号可用 ADMIN_USER / ADMIN_PASS 覆盖）。网页与后端分端口部署时，由 nginx 把 /api/ 反向代理到后端端口（例如网页 8089、后端 8090），前端无需改动；纯静态部署时发布功能自动降级为不可用，编辑器仍可导出 JSON。"
+  },
+  "example": {
+    "id": "my-story",
+    "title": "我的故事",
+    "subtitle": "示例",
+    "description": "一段示例",
+    "theme": "test-theme",
+    "characters": [
+      { "id": "lin", "name": "林晚", "role": "引路人", "personality": "温柔", "description": "雾中的少女。", "affinity": 0, "target": 2 }
+    ],
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章",
+        "subtitle": "",
+        "startScene": "s1",
+        "scenes": {
+          "s1": {
+            "speaker": "旁白",
+            "text": "你醒来了。",
+            "texture": "dawn",
+            "dialogue": "lin_intro",
+            "choices": [
+              { "text": "与她交谈", "next": "s2", "affinity": { "lin": 1 } },
+              { "text": "离开", "next": "__chapterEnd__" }
+            ]
+          },
+          "s2": {
+            "speaker": "旁白",
+            "text": "故事仍在继续。",
+            "texture": "forest",
+            "next": "__chapterEnd__"
+          }
+        }
+      }
+    ]
+  }
+}

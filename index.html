@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="test-theme">
+<head>
+  <meta charset="UTF-8">
+  <!-- 移动端适配：跟随设备宽度，避免视口缩放 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f3ece0">
+  <title>文字冒险合集</title>
+
+  <!--
+    基础样式与组件样式
+    注意：所有 CSS / JS 链接都带有 ?v= 版本号。每次修改静态资源后请递增该版本号，
+    否则浏览器与 CDN 可能继续使用旧缓存，导致样式或脚本与页面结构不匹配。
+  -->
+  <link rel="stylesheet" href="src/css/base.css?v=5">
+  <link rel="stylesheet" href="src/css/components.css?v=5">
+
+  <!--
+    主题样式表注册区
+    扩展方式：在 src/css/themes/ 下新增一个 CSS 文件，并在下方追加一行 link。
+    通过 data-theme-file / data-theme-name / data-theme-desc 属性即可被主题系统自动识别。
+    每个故事通过其 theme 字段关联到这里的主题 id，实现"不同故事不同主题"。
+  -->
+  <link rel="stylesheet" href="src/css/themes/test-theme.css?v=3"
+        data-theme-file="test-theme"
+        data-theme-name="测试主题 · 晨雾"
+        data-theme-desc="暖色晨雾风格，保留的测试主题，供功能测试与审阅。"
+        data-theme-swatch="#ffd9a8">
+  <link rel="stylesheet" href="src/css/themes/ocean-theme.css?v=3"
+        data-theme-file="ocean-theme"
+        data-theme-name="深海"
+        data-theme-desc="深蓝海洋风格，故事「深海回响」的主题。"
+        data-theme-swatch="#0b4a6e">
+  <link rel="stylesheet" href="src/css/themes/night-theme.css?v=3"
+        data-theme-file="night-theme"
+        data-theme-name="星夜"
+        data-theme-desc="深紫星空风格，冷色调配色。"
+        data-theme-swatch="#3a2f6b">
+  <link rel="stylesheet" href="src/css/themes/dusk-theme.css?v=3"
+        data-theme-file="dusk-theme"
+        data-theme-name="暮色"
+        data-theme-desc="暖红暮色风格，黄昏落日配色。"
+        data-theme-swatch="#a0434e">
+  <link rel="stylesheet" href="src/css/themes/forest-theme.css?v=3"
+        data-theme-file="forest-theme"
+        data-theme-name="翡翠"
+        data-theme-desc="深绿森林风格，翠绿色配色。"
+        data-theme-swatch="#2a5c3a">
+</head>
+<body>
+  <!-- 颗粒质感遮罩，素材来自 src/img/textures/grain.svg -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <div class="brand">
+      <img class="brand-logo" src="src/img/icons/logo.svg?v=3" alt="游戏图标">
+      <span class="brand-title" id="brandTitle">文字冒险合集</span>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-ghost" href="edit.html">编辑器</a>
+      <a class="btn btn-ghost" href="admin.html">后台</a>
+      <a class="btn btn-ghost" href="rules.json?v=3" download="rules.json">规则文档</a>
+      <a class="btn btn-ghost" href="dialog.json?v=3" download="dialog.json">对话文档</a>
+      <button class="btn btn-ghost" id="btnTheme" type="button">主题</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- 故事选择画面（进入后首先显示） -->
+    <section id="screen-stories" class="screen screen-stories">
+      <div class="stories-head">
+        <h2 class="stories-title">选择故事</h2>
+        <p class="stories-sub">每个故事拥有独立的主题与存档，互不影响。</p>
+      </div>
+      <div class="stories-actions">
+        <button class="btn btn-ghost btn-small" id="btnImportStory" type="button">导入故事</button>
+        <a class="btn btn-ghost btn-small" href="edit.html">打开编辑器</a>
+        <input id="storyFile" type="file" accept=".json,application/json" class="is-hidden">
+      </div>
+      <ul class="story-list" id="storyList"></ul>
+    </section>
+
+    <!-- 标题画面 -->
+    <section id="screen-title" class="screen screen-title is-hidden">
+      <div class="title-canvas-wrap">
+        <canvas id="titleCanvas" aria-hidden="true"></canvas>
+      </div>
+      <div class="title-content">
+        <p class="title-kicker" id="titleKicker">互动文字冒险</p>
+        <h1 class="title-name" id="titleName">晨曦秘境</h1>
+        <p class="title-sub" id="titleSub">穿过雾林与星湖，寻找传说中第一缕晨光的源头。</p>
+        <div class="title-actions">
+          <button class="btn btn-primary" id="btnStart" type="button">开始游戏</button>
+          <button class="btn btn-ghost" id="btnLoadTitle" type="button">读档</button>
+          <button class="btn btn-ghost" id="btnChapters" type="button">章节选择</button>
+          <button class="btn btn-ghost" id="btnBackStories" type="button">返回故事选择</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 章节选择画面 -->
+    <section id="screen-chapters" class="screen screen-chapters is-hidden">
+      <div class="panel panel-chapters">
+        <h2 class="panel-title">章节</h2>
+        <p class="panel-sub" id="chapterProgress">共 0 章 · 已通关 0 章</p>
+        <ul class="chapter-list" id="chapterList"></ul>
+        <div class="panel-actions">
+          <button class="btn btn-ghost" id="btnRestart" type="button">重新开始</button>
+          <button class="btn btn-ghost" id="btnBackTitle" type="button">返回标题</button>
+          <button class="btn btn-ghost" id="btnHomeChapters" type="button">返回主页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 游戏画面 -->
+    <section id="screen-game" class="screen screen-game is-hidden">
+      <div class="game-topbar">
+        <span class="game-chapter" id="chapterLabel">第一章</span>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-small" id="btnHome" type="button">主页</button>
+          <button class="btn btn-ghost btn-small" id="btnLoad" type="button">读档</button>
+          <button class="btn btn-ghost btn-small" id="btnSave" type="button">存档</button>
+          <button class="btn btn-ghost btn-small" id="btnChars" type="button">人物</button>
+          <button class="btn btn-ghost btn-small" id="btnMenu" type="button">章节</button>
+        </div>
+      </div>
+
+      <div class="scene-canvas-wrap">
+        <canvas id="sceneCanvas" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="scene-card" id="sceneCard">
+        <div class="speaker" id="speaker"></div>
+        <p class="scene-text" id="sceneText"></p>
+        <div class="choices" id="choices"></div>
+        <button class="btn btn-primary continue-btn is-hidden" id="btnContinue" type="button">继续</button>
+      </div>
+    </section>
+
+    <!-- 结局画面 -->
+    <section id="screen-end" class="screen screen-end is-hidden">
+      <div class="panel panel-end">
+        <h2 class="panel-title">旅程暂告一段落</h2>
+        <p class="panel-sub">你已阅读完当前全部章节。感谢游玩。</p>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="btnReplay" type="button">重新开始</button>
+          <button class="btn btn-ghost" id="btnBackTitleEnd" type="button">返回标题</button>
+          <button class="btn btn-ghost" id="btnHomeEnd" type="button">返回主页</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>文字冒险合集</span>
+  </footer>
+
+  <!-- 主题选择弹窗 -->
+  <div class="modal is-hidden" id="themePanel" role="dialog" aria-modal="true" aria-labelledby="themePanelTitle">
+    <div class="modal-backdrop" id="themeBackdrop"></div>
+    <div class="modal-card">
+      <h3 class="panel-title" id="themePanelTitle">选择主题</h3>
+      <p class="panel-sub">主题系统预留扩展位，后续新增主题会在此自动列出。</p>
+      <ul class="theme-list" id="themeList"></ul>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" id="btnCloseTheme" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 人物面板 -->
+  <div class="modal is-hidden" id="charPanel" role="dialog" aria-modal="true" aria-labelledby="charPanelTitle">
+    <div class="modal-backdrop" id="charBackdrop"></div>
+    <div class="modal-card">
+      <h3 class="panel-title" id="charPanelTitle">人物 · 好感度</h3>
+      <ul class="char-list" id="charList"></ul>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" id="btnCloseChars" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 存档 / 读档弹窗 -->
+  <div class="modal is-hidden" id="savePanel" role="dialog" aria-modal="true" aria-labelledby="savePanelTitle">
+    <div class="modal-backdrop" id="saveBackdrop"></div>
+    <div class="modal-card modal-save">
+      <h3 class="panel-title" id="savePanelTitle">存档管理</h3>
+      <p class="panel-sub">每个用户名在「<span id="saveStoryLabel">当前故事</span>」下拥有 10 个档位；点击已占用槽位可覆盖。</p>
+
+      <div class="save-tabs">
+        <button class="save-tab is-active" data-mode="save" type="button">存档</button>
+        <button class="save-tab" data-mode="load" type="button">读档</button>
+      </div>
+
+      <div class="save-user-row">
+        <input class="text-input" id="saveUsername" type="text" list="saveUserList" placeholder="输入用户名" autocomplete="off">
+        <datalist id="saveUserList"></datalist>
+      </div>
+      <div class="user-chips" id="saveUserChips"></div>
+
+      <ul class="slot-list" id="slotList"></ul>
+
+      <div class="save-file-actions">
+        <button class="btn btn-ghost btn-small" id="btnExport" type="button">导出存档</button>
+        <button class="btn btn-ghost btn-small" id="btnImport" type="button">导入存档</button>
+        <input id="importFile" type="file" accept=".json,application/json" class="is-hidden">
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost" id="btnCloseSave" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast is-hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <!--
+    脚本加载顺序说明：
+    0. api.js                      发布/审核接口封装（后端不可用时自动降级）
+    1. data/chapters.js            故事注册表（StoryRegistry）
+    2. data/stories/*.js           各故事数据（调用 register 注册）
+    3. theme.js                    主题管理
+    4. chapter.js                  章节引擎（按故事隔离存档）
+    5. save.js                     手动存档管理（故事 + 用户名 + 档位）
+    6. render.js                   画布贴图绘制
+    7. main.js                     应用装配与界面交互
+  -->
+  <script src="src/js/asset-check.js?v=1"></script>
+  <script src="src/js/api.js?v=5"></script>
+  <script src="src/js/data/chapters.js?v=3"></script>
+  <script src="src/js/data/stories/dawn-realm.js?v=3"></script>
+  <script src="src/js/data/stories/deep-echo.js?v=3"></script>
+  <script src="src/js/theme.js?v=3"></script>
+  <script src="src/js/chapter.js?v=4"></script>
+  <script src="src/js/save.js?v=3"></script>
+  <script src="src/js/render.js?v=4"></script>
+  <script src="src/js/main.js?v=7"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* ==========================================================================
+   themes/ocean-theme.css
+   主题：深海
+   说明：故事二「深海回响」使用的页面主题，深蓝海洋风格。
+   通过覆盖 [data-theme="ocean-theme"] 下的 CSS 变量改变整体配色与画布贴图调色板。
+   ========================================================================== */
+
+[data-theme="ocean-theme"] {
+  /* 界面配色：深蓝海洋风格 */
+  --bg: #06121f;
+  --bg-soft: #0a1c2e;
+  --panel: #0d2436;
+  --panel-2: #123149;
+  --text: #d6e8f5;
+  --text-muted: #7f9cb3;
+  --accent: #4fd1c5;
+  --accent-strong: #2ba8a0;
+  --accent-contrast: #04121c;
+  --border: #1e3d55;
+  --shadow: 0 12px 32px rgba(0, 10, 20, 0.55);
+  --radius: 14px;
+
+  /* 画布贴图调色板：深海与幽光 */
+  --sky-top: #03182a;
+  --sky-mid: #063454;
+  --sky-bottom: #0b4a6e;
+  --ground: #04121f;
+  --decor-a: #0b4a6e;
+  --decor-b: #062b40;
+  --glow: #4fd1c5;
+}

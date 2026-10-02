@@ -1,0 +1,30 @@
+/* ==========================================================================
+   themes/night-theme.css
+   主题：星夜
+   深紫夜空风格，冷色调星空配色。
+   ========================================================================== */
+
+[data-theme="night-theme"] {
+  /* 界面配色：深紫星夜风格 */
+  --bg: #0d0b1a;
+  --bg-soft: #151228;
+  --panel: #1b1830;
+  --panel-2: #241f40;
+  --text: #ece9fb;
+  --text-muted: #9a93c0;
+  --accent: #b39dfb;
+  --accent-strong: #8b74e6;
+  --accent-contrast: #120f24;
+  --border: #332c54;
+  --shadow: 0 12px 32px rgba(8, 6, 24, 0.5);
+  --radius: 16px;
+
+  /* 画布贴图调色板：星空与夜色 */
+  --sky-top: #0a0820;
+  --sky-mid: #1b1642;
+  --sky-bottom: #3a2f6b;
+  --ground: #14102b;
+  --decor-a: #3a2f6b;
+  --decor-b: #1e1838;
+  --glow: #b39dfb;
+}

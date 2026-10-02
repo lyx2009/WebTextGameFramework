@@ -1,0 +1,30 @@
+/* ==========================================================================
+   themes/dusk-theme.css
+   主题：暮色
+   暖红暮色风格，黄昏落日的暖色调配色。
+   ========================================================================== */
+
+[data-theme="dusk-theme"] {
+  /* 界面配色：暖红暮色风格 */
+  --bg: #1a0f14;
+  --bg-soft: #26141b;
+  --panel: #301a22;
+  --panel-2: #3d222c;
+  --text: #f6e7e0;
+  --text-muted: #c79a90;
+  --accent: #f0825f;
+  --accent-strong: #d95f3b;
+  --accent-contrast: #2a0f0c;
+  --border: #54303a;
+  --shadow: 0 12px 32px rgba(30, 8, 12, 0.5);
+  --radius: 16px;
+
+  /* 画布贴图调色板：黄昏与暮色 */
+  --sky-top: #2a1030;
+  --sky-mid: #5b1f3a;
+  --sky-bottom: #a0434e;
+  --ground: #241018;
+  --decor-a: #7c3348;
+  --decor-b: #3a1620;
+  --glow: #f6a06e;
+}
