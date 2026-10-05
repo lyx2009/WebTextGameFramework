@@ -351,6 +351,7 @@
     populateSelect($("fNext"), sceneIdOptions(chapter, true), scene.next || "");
     $("fDialogue").value = scene.dialogue || "";
     setImagePreview("sceneBgPreview", scene.background);
+    renderScenePortrait(scene);
 
     $("btnSetStart").textContent = (chapter.startScene === scene.id) ? "已是起始场景" : "设为起始场景";
 
@@ -577,6 +578,7 @@
     $("fCharAffinity").value = (c.affinity || 0);
     $("fCharTarget").value = (c.target || 0);
     setImagePreview("charImagePreview", c.image);
+    renderPortraits();
   }
 
   function addCharacter() {
@@ -775,8 +777,17 @@
         line.text = textInput.value;
       });
 
+      var emotionInput = el("input", "text-input", null);
+      emotionInput.type = "text";
+      emotionInput.placeholder = "情绪（可选，如 开心；对应该角色的立绘）";
+      emotionInput.value = line.emotion || "";
+      emotionInput.addEventListener("input", function () {
+        line.emotion = emotionInput.value || undefined;
+      });
+
       fields.appendChild(speakerInput);
       fields.appendChild(textInput);
+      fields.appendChild(emotionInput);
       li.appendChild(fields);
 
       var actions = el("div", "ed-item-actions", null);
@@ -2129,6 +2140,7 @@
     renderFlowDialoguePreview();
     renderFlowChoices();
     setImagePreview("flowBgPreview", scene.background);
+    renderFlowPortrait(scene);
   }
 
   function renderFlowDialogueSelect() {
@@ -2182,6 +2194,9 @@
         var ln = el("div", "flow-detail-line", null);
         ln.appendChild(el("span", "speaker", speakerLabel(line.speaker) + "："));
         ln.appendChild(document.createTextNode(line.text || ""));
+        if (line.emotion) {
+          ln.appendChild(el("span", "flow-badge", "情绪 " + line.emotion));
+        }
         box.appendChild(ln);
       });
     }
@@ -2385,6 +2400,108 @@
         flowFit();
       }
     }, 250);
+  }
+
+  // ---------- 人物立绘（按情绪，可选功能） ----------
+  var uploadingEmotion = null;
+
+  function renderPortraits() {
+    var box = $("portraitList");
+    var c = currentCharacter();
+    if (!box) {
+      return;
+    }
+    box.innerHTML = "";
+    if (!c) {
+      return;
+    }
+    c.portraits = c.portraits || {};
+    var emotions = Object.keys(c.portraits);
+    if (!emotions.length) {
+      box.appendChild(el("div", "ed-hint", "尚未添加立绘；添加后可在剧情或对话中按情绪显示。「普通」会作为默认。"));
+      return;
+    }
+    emotions.forEach(function (emotion) {
+      var row = el("div", "portrait-row", null);
+      row.appendChild(el("span", "portrait-emotion", emotion));
+      var img = el("img", "ed-image-preview" + (c.portraits[emotion] ? "" : " is-hidden"), null);
+      if (c.portraits[emotion]) {
+        img.src = c.portraits[emotion];
+        img.alt = emotion;
+      }
+      row.appendChild(img);
+      var actions = el("div", "ed-image-actions", null);
+      actions.appendChild(makeBtn("上传图片", function () {
+        uploadingEmotion = emotion;
+        $("portraitFile").click();
+      }));
+      actions.appendChild(makeBtn("删除", function () {
+        delete c.portraits[emotion];
+        renderPortraits();
+      }));
+      row.appendChild(actions);
+      box.appendChild(row);
+    });
+  }
+
+  function addEmotion() {
+    var c = currentCharacter();
+    if (!c) {
+      return;
+    }
+    var name = prompt("输入情绪名称，例如：开心、生气、害羞（「普通」会作为默认）", "开心");
+    if (!name) {
+      return;
+    }
+    name = name.trim();
+    if (!name) {
+      return;
+    }
+    c.portraits = c.portraits || {};
+    if (c.portraits[name] !== undefined) {
+      toast("该情绪已存在");
+      return;
+    }
+    c.portraits[name] = "";
+    renderPortraits();
+  }
+
+  /** 场景表单里的立绘选择（角色 + 情绪）。 */
+  function renderScenePortrait(scene) {
+    var sel = $("fPortraitChar");
+    sel.innerHTML = "";
+    var none = document.createElement("option");
+    none.value = "";
+    none.textContent = "（不显示立绘）";
+    sel.appendChild(none);
+    (story.characters || []).forEach(function (ch) {
+      var o = document.createElement("option");
+      o.value = ch.id;
+      o.textContent = ch.name || ch.id;
+      sel.appendChild(o);
+    });
+    var portrait = scene.portrait || {};
+    sel.value = portrait.characterId || "";
+    $("fPortraitEmotion").value = portrait.emotion || "";
+  }
+
+  /** 流程图详情面板里的立绘选择（角色 + 情绪）。 */
+  function renderFlowPortrait(scene) {
+    var sel = $("fFlowPortraitChar");
+    sel.innerHTML = "";
+    var none = document.createElement("option");
+    none.value = "";
+    none.textContent = "（不显示立绘）";
+    sel.appendChild(none);
+    (story.characters || []).forEach(function (ch) {
+      var o = document.createElement("option");
+      o.value = ch.id;
+      o.textContent = ch.name || ch.id;
+      sel.appendChild(o);
+    });
+    var portrait = scene.portrait || {};
+    sel.value = portrait.characterId || "";
+    $("fFlowPortraitEmotion").value = portrait.emotion || "";
   }
 
   // ---------- 事件绑定 ----------
@@ -2661,6 +2778,30 @@
       renderFlowchart();
       renderFlowDialoguePreview();
     });
+    // 流程图：场景立绘（角色 + 情绪）
+    $("fFlowPortraitChar").addEventListener("change", function () {
+      var chapter = flowChapter();
+      var scene = chapter && chapter.scenes[flowSelectedId];
+      if (!scene) {
+        return;
+      }
+      if (!this.value) {
+        scene.portrait = undefined;
+        $("fFlowPortraitEmotion").value = "";
+        return;
+      }
+      scene.portrait = scene.portrait || {};
+      scene.portrait.characterId = this.value;
+      scene.portrait.emotion = $("fFlowPortraitEmotion").value || "";
+    });
+    $("fFlowPortraitEmotion").addEventListener("input", function () {
+      var chapter = flowChapter();
+      var scene = chapter && chapter.scenes[flowSelectedId];
+      if (!scene || !scene.portrait) {
+        return;
+      }
+      scene.portrait.emotion = this.value || "";
+    });
     $("flowChapterSelect").addEventListener("change", function () {
       flowChapterId = this.value;
       selectedChapterId = this.value;
@@ -2710,6 +2851,54 @@
       }
       c.image = undefined;
       setImagePreview("charImagePreview", null);
+    });
+
+    // 人物立绘（按情绪）
+    $("btnAddEmotion").addEventListener("click", addEmotion);
+    $("portraitFile").addEventListener("change", function (ev) {
+      var file = ev.target.files && ev.target.files[0];
+      ev.target.value = "";
+      if (!file) {
+        return;
+      }
+      var emotion = uploadingEmotion;
+      readImageFile(file, 900, function (url) {
+        var c = currentCharacter();
+        if (!c || !url) {
+          toast("图片读取失败");
+          return;
+        }
+        c.portraits = c.portraits || {};
+        c.portraits[emotion] = url;
+        renderPortraits();
+        toast("已设置「" + emotion + "」立绘");
+      });
+    });
+
+    // 场景立绘（角色 + 情绪）
+    $("fPortraitChar").addEventListener("change", function () {
+      var scene = currentScene();
+      if (!scene) {
+        return;
+      }
+      if (!this.value) {
+        scene.portrait = undefined;
+        $("fPortraitEmotion").value = "";
+        return;
+      }
+      scene.portrait = scene.portrait || {};
+      scene.portrait.characterId = this.value;
+      scene.portrait.emotion = $("fPortraitEmotion").value || "";
+    });
+    $("fPortraitEmotion").addEventListener("input", function () {
+      var scene = currentScene();
+      if (!scene) {
+        return;
+      }
+      if (!scene.portrait) {
+        return;
+      }
+      scene.portrait.emotion = this.value || "";
     });
 
     $("btnStoryBgUpload").addEventListener("click", function () { $("storyBgFile").click(); });

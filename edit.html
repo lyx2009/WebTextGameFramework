@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>故事编辑工具</title>
-  <link rel="stylesheet" href="src/css/editor.css?v=7">
+  <link rel="stylesheet" href="src/css/editor.css?v=8">
 </head>
 <body>
   <header class="ed-header">
@@ -13,7 +13,7 @@
       <button class="btn btn-ghost btn-view is-active" id="btnFlowView" type="button">流程图</button>
       <button class="btn btn-ghost btn-view" id="btnFormView" type="button">表单</button>
       <button class="btn btn-ghost" id="btnGuide" type="button">编写指南</button>
-      <a class="btn btn-ghost" href="rules.json?v=3" download="rules.json">规则文档</a>
+      <a class="btn btn-ghost" href="rules.json?v=4" download="rules.json">规则文档</a>
       <a class="btn btn-ghost" href="dialog.json?v=3" download="dialog.json">对话文档</a>
       <button class="btn btn-ghost" id="btnNewStory" type="button">新建故事</button>
       <button class="btn btn-ghost" id="btnSaveDraft" type="button">保存草稿</button>
@@ -30,6 +30,7 @@
       <input id="storyBgFile" type="file" accept="image/*" class="is-hidden">
       <input id="sceneBgFile" type="file" accept="image/*" class="is-hidden">
       <input id="flowBgFile" type="file" accept="image/*" class="is-hidden">
+      <input id="portraitFile" type="file" accept="image/*" class="is-hidden">
     </div>
   </header>
 
@@ -111,6 +112,11 @@
               <button class="btn btn-ghost btn-small" id="btnCharImageClear" type="button">清除</button>
             </div>
           </div>
+        </div>
+        <div class="ed-field">
+          <span>人物立绘（可选，按情绪区分；「普通」作为默认）</span>
+          <div id="portraitList" class="portrait-list"></div>
+          <button class="btn btn-ghost btn-small" id="btnAddEmotion" type="button">添加情绪立绘</button>
         </div>
         <div class="ed-row">
           <label class="ed-field"><span>初始好感度</span><input class="text-input" id="fCharAffinity" type="number" step="1" value="0"></label>
@@ -213,6 +219,17 @@
           </div>
         </div>
 
+        <div class="ed-row">
+          <label class="ed-field">
+            <span>立绘角色（可选）</span>
+            <select class="text-input" id="fPortraitChar"></select>
+          </label>
+          <label class="ed-field">
+            <span>立绘情绪</span>
+            <input class="text-input" id="fPortraitEmotion" type="text" placeholder="如 开心 / 普通">
+          </label>
+        </div>
+
         <div class="ed-choices-head">
           <h4 class="ed-subtitle">选项（分支）</h4>
           <div class="ed-choices-actions">
@@ -276,6 +293,16 @@
               <button class="btn btn-ghost btn-small" id="btnFlowBgClear" type="button">清除</button>
             </div>
           </div>
+        </div>
+        <div class="ed-row">
+          <label class="ed-field">
+            <span>立绘角色（可选）</span>
+            <select class="text-input" id="fFlowPortraitChar"></select>
+          </label>
+          <label class="ed-field">
+            <span>立绘情绪</span>
+            <input class="text-input" id="fFlowPortraitEmotion" type="text" placeholder="如 开心 / 普通">
+          </label>
         </div>
         <div class="flow-detail-section">
           <h5>选项（分支）</h5>
@@ -430,6 +457,6 @@ window.StoryRegistry.register({
   <script src="src/js/data/chapters.js?v=3"></script>
   <script src="src/js/data/stories/dawn-realm.js?v=3"></script>
   <script src="src/js/data/stories/deep-echo.js?v=3"></script>
-  <script src="src/js/editor.js?v=8"></script>
+  <script src="src/js/editor.js?v=10"></script>
 </body>
 </html>

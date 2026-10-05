@@ -411,6 +411,40 @@ window.App = (function () {
     return id;
   }
 
+  /** 解析某角色某情绪对应的立绘；没有则回退「普通」，再没有返回 null。 */
+  function resolvePortrait(characterId, emotion) {
+    var characters = ChapterSystem.getCharacters();
+    for (var i = 0; i < characters.length; i++) {
+      if (characters[i].id === characterId) {
+        var portraits = characters[i].portraits || {};
+        if (emotion && portraits[emotion]) {
+          return portraits[emotion];
+        }
+        if (portraits["普通"]) {
+          return portraits["普通"];
+        }
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /** 更新立绘显示（可选功能）：没有立绘时自动隐藏。 */
+  function updatePortrait(characterId, emotion) {
+    var el = $("portrait");
+    if (!el) {
+      return;
+    }
+    var src = resolvePortrait(characterId, emotion);
+    if (src) {
+      el.src = src;
+      el.classList.remove("is-hidden");
+    } else {
+      el.removeAttribute("src");
+      el.classList.add("is-hidden");
+    }
+  }
+
   function applyAffinity(deltas) {
     if (deltas) {
       ChapterSystem.addAffinity(deltas);
@@ -432,6 +466,7 @@ window.App = (function () {
     function showLine() {
       var line = lines[index];
       $("speaker").textContent = speakerName(line.speaker);
+      updatePortrait(line.speaker, line.emotion);
       hideContinue();
       typewrite($("sceneText"), line.text, function () {
         $("btnContinue").textContent = (index < lines.length - 1) ? "下一句" : "继续";
@@ -567,12 +602,15 @@ window.App = (function () {
     TextureRenderer.render($("sceneCanvas"), currentTexture);
 
     $("speaker").textContent = scene.speaker || "旁白";
+    var scenePortrait = scene.portrait || {};
+    updatePortrait(scenePortrait.characterId || scene.speaker, scenePortrait.emotion);
 
     var visibleChoices = filterChoices(scene);
     typewrite($("sceneText"), scene.text, function () {
       if (scene.dialogue) {
         playDialogue(scene.dialogue, function () {
           $("speaker").textContent = scene.speaker || "旁白";
+          updatePortrait(scenePortrait.characterId || scene.speaker, scenePortrait.emotion);
           showChoices(visibleChoices);
         });
       } else {

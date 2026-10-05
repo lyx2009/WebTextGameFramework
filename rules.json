@@ -24,6 +24,7 @@
       "personality": { "type": "string", "required": false, "description": "性格标签，例如「温柔而疏离」。" },
       "description": { "type": "string", "required": false, "description": "人设简介。" },
       "image": { "type": "string", "required": false, "description": "可选，人物图片（data URL）。在编辑器上传后自动压缩生成，游戏中显示在人物面板。" },
+      "portraits": { "type": "object", "required": false, "description": "可选，人物立绘。键为情绪名（如「普通」「开心」），值为图片 data URL；「普通」作为默认立绘。不设置则游戏不显示立绘。" },
       "affinity": { "type": "number", "required": false, "description": "初始好感度，缺省为 0。" },
       "target": { "type": "number", "required": false, "description": "攻略成功所需好感度；达到该值视为攻略成功。" }
     }
@@ -48,7 +49,8 @@
       "next": { "type": "string", "required": false, "description": "无选项时的跳转场景 id；可用 __chapterEnd__ 表示章节结束。" },
       "choices": { "type": "array", "required": false, "description": "选项数组；存在可见选项时优先显示选项。" },
       "dialogue": { "type": "string", "required": false, "description": "可选，正文播放完后触发的对话 id，对应 dialog.json 中的条目。" },
-      "background": { "type": "string", "required": false, "description": "可选，该场景的背景图（data URL），优先于故事的 background。在编辑器上传后自动生成。" }
+      "background": { "type": "string", "required": false, "description": "可选，该场景的背景图（data URL），优先于故事的 background。在编辑器上传后自动生成。" },
+      "portrait": { "type": "object", "required": false, "description": "可选，本场景显示的立绘，形如 { \"characterId\": \"角色id\", \"emotion\": \"情绪名\" }；缺省时按说话人自动显示其默认立绘。" }
     }
   },
   "choice": {
@@ -75,7 +77,7 @@
       "characterId": { "type": "string", "required": false, "description": "主角色标识，用于区分对话所属角色。" },
       "title": { "type": "string", "required": false, "description": "对话标题。" },
       "affinity": { "type": "object", "required": false, "description": "对话播放完后获得的好感度，形如 {\"lin\": 1}。" },
-      "lines": { "type": "array", "required": true, "description": "对话行数组；每行 { speaker, text }，speaker 为角色 id 或「旁白」。" }
+      "lines": { "type": "array", "required": true, "description": "对话行数组；每行 { speaker, text, emotion }，speaker 为角色 id 或「旁白」，emotion 可选（对应该角色的立绘情绪）。" }
     }
   },
   "enums": {

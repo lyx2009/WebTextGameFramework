@@ -13,7 +13,7 @@
     否则浏览器与 CDN 可能继续使用旧缓存，导致样式或脚本与页面结构不匹配。
   -->
   <link rel="stylesheet" href="src/css/base.css?v=5">
-  <link rel="stylesheet" href="src/css/components.css?v=5">
+  <link rel="stylesheet" href="src/css/components.css?v=6">
 
   <!--
     主题样式表注册区
@@ -59,7 +59,7 @@
     <div class="header-actions">
       <a class="btn btn-ghost" href="edit.html">编辑器</a>
       <a class="btn btn-ghost" href="admin.html">后台</a>
-      <a class="btn btn-ghost" href="rules.json?v=3" download="rules.json">规则文档</a>
+      <a class="btn btn-ghost" href="rules.json?v=4" download="rules.json">规则文档</a>
       <a class="btn btn-ghost" href="dialog.json?v=3" download="dialog.json">对话文档</a>
       <button class="btn btn-ghost" id="btnTheme" type="button">主题</button>
     </div>
@@ -130,6 +130,7 @@
       </div>
 
       <div class="scene-card" id="sceneCard">
+        <img class="portrait is-hidden" id="portrait" alt="人物立绘">
         <div class="speaker" id="speaker"></div>
         <p class="scene-text" id="sceneText"></p>
         <div class="choices" id="choices"></div>
@@ -235,6 +236,6 @@
   <script src="src/js/chapter.js?v=4"></script>
   <script src="src/js/save.js?v=3"></script>
   <script src="src/js/render.js?v=4"></script>
-  <script src="src/js/main.js?v=7"></script>
+  <script src="src/js/main.js?v=8"></script>
 </body>
 </html>

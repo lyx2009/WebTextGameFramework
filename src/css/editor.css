@@ -939,6 +939,33 @@ textarea.text-input {
 }
 
 /* --------------------------------------------------------------------------
+   人物立绘（按情绪）
+   -------------------------------------------------------------------------- */
+.portrait-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.portrait-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.portrait-emotion {
+  flex: 0 0 auto;
+  min-width: 52px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
    流程图使用说明
    -------------------------------------------------------------------------- */
 .flow-help-list {
